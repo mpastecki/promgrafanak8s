@@ -1,0 +1,16 @@
+context: kadevakscluster
+
+releases:
+  - name: kick-prometheus
+    namespace: prometheus
+    chart: stable/prometheus
+    version: ~7.4.5
+    values:
+      - prometheus/values.yaml
+
+  - name: kick-grafana
+    namespace: prometheus
+    chart: stable/grafana
+    version: ~1.18.0
+    values:
+      - grafana/values.yaml

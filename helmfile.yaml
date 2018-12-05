@@ -13,4 +13,17 @@ releases:
     chart: stable/grafana
     version: ~1.18.0
     values:
-      - grafana/values.yaml
+      - ingress:
+          enabled: false
+          annotations:
+            kubernetes.io/ingress.class: nginx
+          path: /grafana/
+          hosts: 10.12.0.102
+      - resources:
+          limits:
+            cpu: 100m
+            memory: 128Mi
+          requests:
+            cpu: 100m
+            memory: 128Mi
+            

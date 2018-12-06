@@ -26,4 +26,12 @@ releases:
           requests:
             cpu: 100m
             memory: 128Mi
-            
+      - persistence:
+          enabled: true
+          size: 10Gi
+          accessModes:
+            - ReadWriteOnce
+          storageClassName: default
+          annotations: {}
+          subPath: ""
+          existingClaim:  

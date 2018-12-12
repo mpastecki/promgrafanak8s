@@ -321,10 +321,10 @@ kubeStateMetrics:
   ##
   resources:
     limits:
-      cpu: 10m
+      cpu: 300m
       memory: 16Mi
     requests:
-      cpu: 10m
+      cpu: 300m
       memory: 16Mi
 
   ## Security context to be added to kube-state-metrics pods

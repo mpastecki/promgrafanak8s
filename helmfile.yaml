@@ -4,21 +4,68 @@ releases:
   - name: kick-prometheus
     namespace: prometheus
     chart: stable/prometheus
-    version: ~7.4.5
+    version: ~7.4.6
     values:
-      - prometheus/values.yaml
+      - rbac:
+          create: false
+      - alertmanager:
+          resources:
+            limits:
+              cpu: 10m
+              memory: 32Mi
+            requests:
+              cpu: 10m
+              memory: 32Mi
+      - kubeStateMetrics:
+          resources:
+            limits:
+              cpu: 600m
+              memory: 32Mi
+            requests:
+              cpu: 600m
+              memory: 32Mi
+      - nodeExporter:
+          resources:
+            limits:
+              cpu: 200m
+              memory: 50Mi
+            requests:
+              cpu: 100m
+              memory: 30Mi
+      - server:
+          resources:
+            limits:
+              cpu: 500m
+              memory: 512Mi
+            requests:
+              cpu: 500m
+              memory: 512Mi
+      - extraScrapeConfigs: |
+          - job_name: vnetlinuxnodes
+            static_configs:
+              - targets:
+                - 10.12.0.5:9100
+      - pushgateway:
+          resources:
+            limits:
+              cpu: 200m
+              memory: 32Mi
+            requests:
+              cpu: 200m
+              memory: 32Mi
 
   - name: kick-grafana
     namespace: prometheus
     chart: stable/grafana
     version: ~1.18.0
     values:
+      - rbac:
+          create: false
+      - plugins:
+          - grafana-clock-panel
+          - grafana-piechart-panel
       - ingress:
           enabled: false
-          annotations:
-            kubernetes.io/ingress.class: nginx
-          path: /grafana/
-          hosts: 10.12.0.102
       - resources:
           limits:
             cpu: 100m
@@ -35,3 +82,12 @@ releases:
           annotations: {}
           subPath: ""
           existingClaim:  
+      - datasources:
+          datasources.yaml:
+            apiVersion: 1
+            datasources:
+            - name: Prometheus
+              type: prometheus
+              url: http://kick-prometheus-server.prometheus.svc.cluster.local
+              access: proxy
+              isDefault: true
